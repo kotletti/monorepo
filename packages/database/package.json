@@ -1,0 +1,25 @@
+{
+  "name": "@kotletti/database",
+  "version": "0.0.1",
+  "description": "Database dependency for services",
+  "author": "@ddkand",
+  "license": "ISC",
+  "main": "./build/index.js",
+  "types": "./build/index.d.ts",
+  "typings": "./build/index.d.ts",
+  "scripts": {
+    "test": "jest",
+    "clean": "rimraf ./build",
+    "build": "tsc -b",
+    "rebuild": "npm run clean && npm run build",
+    "prettier:check": "prettier --check ./src"
+  },
+  "devDependencies": {
+    "@kotletti/config": "^0.0.1",
+    "@kotletti/types": "^0.0.1",
+    "@types/mongoose": "^5.11.97"
+  },
+  "dependencies": {
+    "mongoose": "^6.0.12"
+  }
+}

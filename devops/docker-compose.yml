@@ -1,0 +1,163 @@
+version: "3.5"
+
+networks:
+  kotletti-devops-net:
+    name: kotletti-devops-net
+    driver: bridge
+
+services:
+  zookeeper:
+    image: bitnami/zookeeper:latest
+    container_name: zookeeper
+    ports:
+      - "2181:2181"
+    environment:
+      - ALLOW_ANONYMOUS_LOGIN=yes
+    networks:
+      - kotletti-devops-net
+
+  broker0:
+    image: bitnami/kafka:latest
+    container_name: broker0
+    ports:
+      - "9093:9093"
+    environment:
+      - KAFKA_CFG_ZOOKEEPER_CONNECT=zookeeper:2181
+      - ALLOW_PLAINTEXT_LISTENER=yes
+      - KAFKA_CFG_LISTENER_SECURITY_PROTOCOL_MAP=CLIENT:PLAINTEXT,EXTERNAL:PLAINTEXT
+      - KAFKA_CFG_LISTENERS=CLIENT://:9092,EXTERNAL://:9093
+      - KAFKA_CFG_ADVERTISED_LISTENERS=CLIENT://broker0:9092,EXTERNAL://localhost:9093
+      - KAFKA_INTER_BROKER_LISTENER_NAME=CLIENT
+      - KAFKA_CFG_AUTO_CREATE_TOPICS_ENABLE=true
+    depends_on:
+      - zookeeper
+    networks:
+      - kotletti-devops-net
+
+  broker1:
+    image: bitnami/kafka:latest
+    container_name: broker1
+    ports:
+      - "9094:9094"
+    environment:
+      - KAFKA_CFG_ZOOKEEPER_CONNECT=zookeeper:2181
+      - ALLOW_PLAINTEXT_LISTENER=yes
+      - KAFKA_CFG_LISTENER_SECURITY_PROTOCOL_MAP=CLIENT:PLAINTEXT,EXTERNAL:PLAINTEXT
+      - KAFKA_CFG_LISTENERS=CLIENT://:9092,EXTERNAL://:9094
+      - KAFKA_CFG_ADVERTISED_LISTENERS=CLIENT://broker1:9092,EXTERNAL://localhost:9094
+      - KAFKA_INTER_BROKER_LISTENER_NAME=CLIENT
+      - KAFKA_CFG_AUTO_CREATE_TOPICS_ENABLE=true
+    depends_on:
+      - zookeeper
+    networks:
+      - kotletti-devops-net
+
+  broker2:
+    image: bitnami/kafka:latest
+    container_name: broker2
+    ports:
+      - "9095:9095"
+    environment:
+      - KAFKA_CFG_ZOOKEEPER_CONNECT=zookeeper:2181
+      - ALLOW_PLAINTEXT_LISTENER=yes
+      - KAFKA_CFG_LISTENER_SECURITY_PROTOCOL_MAP=CLIENT:PLAINTEXT,EXTERNAL:PLAINTEXT
+      - KAFKA_CFG_LISTENERS=CLIENT://:9092,EXTERNAL://:9095
+      - KAFKA_CFG_ADVERTISED_LISTENERS=CLIENT://broker2:9092,EXTERNAL://localhost:9095
+      - KAFKA_INTER_BROKER_LISTENER_NAME=CLIENT
+      - KAFKA_CFG_AUTO_CREATE_TOPICS_ENABLE=true
+    depends_on:
+      - zookeeper
+    networks:
+      - kotletti-devops-net
+
+  kafdrop:
+    image: obsidiandynamics/kafdrop:latest
+    container_name: kafdrop
+    restart: always
+    ports:
+      - 9000:9000
+    environment:
+      - KAFKA_BROKERCONNECT=broker0:9092,broker1:9092,broker2:9092
+    depends_on:
+      - broker0
+    networks:
+      - kotletti-devops-net
+
+  kotletti-devops-mongodb0:
+    hostname: kotletti-devops-mongodb0
+    container_name: kotletti-devops-mongodb0
+    image: mongo:5
+    restart: always
+    networks:
+      - kotletti-devops-net
+    volumes:
+      - ./volumes/mongo-h0:/data/db
+    ports:
+      - "37017:37017"
+    entrypoint:
+      [
+        "/usr/bin/mongod",
+        "--bind_ip",
+        "0.0.0.0",
+        "--port",
+        "37017",
+        "--replSet",
+        "rs0",
+      ]
+
+  kotletti-devops-mongodb1:
+    hostname: kotletti-devops-mongodb1
+    container_name: kotletti-devops-mongodb1
+    image: mongo:5
+    restart: always
+    networks:
+      - kotletti-devops-net
+    volumes:
+      - ./volumes/mongo-h1:/data/db
+    ports:
+      - "37018:37018"
+    entrypoint:
+      [
+        "/usr/bin/mongod",
+        "--bind_ip",
+        "0.0.0.0",
+        "--port",
+        "37018",
+        "--replSet",
+        "rs0",
+      ]
+
+  kotletti-devops-mongodb2:
+    hostname: kotletti-devops-mongodb2
+    container_name: kotletti-devops-mongodb2
+    image: mongo:5
+    restart: always
+    networks:
+      - kotletti-devops-net
+    volumes:
+      - ./volumes/mongo-h2:/data/db
+    ports:
+      - "37019:37019"
+    entrypoint:
+      [
+        "/usr/bin/mongod",
+        "--bind_ip",
+        "0.0.0.0",
+        "--port",
+        "37019",
+        "--replSet",
+        "rs0",
+      ]
+
+  kotletti-devops-mongosetup:
+    image: mongo:5
+    networks:
+      - kotletti-devops-net
+    depends_on:
+      - kotletti-devops-mongodb0
+      - kotletti-devops-mongodb1
+      - kotletti-devops-mongodb2
+    volumes:
+      - ./scripts:/scripts:ro
+    restart: "no"
+    entrypoint: ["bash", "/scripts/mongo-setup.sh"]

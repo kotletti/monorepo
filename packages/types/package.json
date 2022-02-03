@@ -1,0 +1,17 @@
+{
+  "name": "@kotletti/types",
+  "version": "0.0.1",
+  "description": "Types dependency for services",
+  "author": "@ddkand",
+  "license": "ISC",
+  "main": "./build/index.d.ts",
+  "types": "./build/index.d.ts",
+  "typings": "./build/index.d.ts",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "clean": "rimraf ./build",
+    "build": "tsc -b",
+    "rebuild": "npm run clean && npm run build",
+    "prettier:check": "prettier --check ./src"
+  }
+}

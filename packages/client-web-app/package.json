@@ -1,0 +1,42 @@
+{
+  "name": "@kotletti/client-web-app",
+  "version": "0.0.1",
+  "author": "",
+  "description": "",
+  "license": "ISC",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "clean": "rimraf ./build",
+    "build": "webpack --config webpack.config.ts",
+    "rebuild": "npm run clean && npm run build",
+    "start": "serve ./build -s -p 4400",
+    "dev": "NODE_ENV=development webpack serve --config webpack.config.ts",
+    "prettier:check": "prettier --check ./src"
+  },
+  "dependencies": {
+    "@kotletti/uikit-web": "^0.0.1",
+    "react": "^17.0.2",
+    "react-dom": "^17.0.2",
+    "react-router-dom": "^6.2.1",
+    "styled-components": "^5.3.3"
+  },
+  "devDependencies": {
+    "@babel/preset-env": "^7.16.7",
+    "@babel/preset-react": "^7.16.7",
+    "@babel/preset-typescript": "^7.16.7",
+    "@types/node": "^17.0.8",
+    "@types/react": "^17.0.38",
+    "@types/react-dom": "^17.0.11",
+    "@types/react-router-dom": "^5.3.3",
+    "@types/styled-components": "^5.1.19",
+    "@types/webpack": "^5.28.0",
+    "@types/webpack-dev-server": "^4.7.2",
+    "babel-loader": "^8.2.3",
+    "fork-ts-checker-webpack-plugin": "^6.5.0",
+    "html-webpack-plugin": "^5.5.0",
+    "source-map-loader": "^3.0.1",
+    "typescript": "^4.5.4",
+    "webpack": "^5.65.0",
+    "webpack-cli": "^4.9.1"
+  }
+}

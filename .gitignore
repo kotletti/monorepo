@@ -1,0 +1,8 @@
+node_modules
+devops/volumes
+lerna-debug.log
+
+.env
+build
+
+.expo

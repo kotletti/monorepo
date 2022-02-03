@@ -1,0 +1,10 @@
+{
+  "preset": "ts-jest",
+  "testEnvironment": "node",
+  "moduleNameMapper": {
+    "^src/(.*)$": "./src/$1"
+  },
+  "modulePathIgnorePatterns": ["./build"],
+  "verbose": true,
+  "setupFiles": ["dotenv/config"]
+}
