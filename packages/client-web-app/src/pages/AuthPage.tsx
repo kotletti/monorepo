@@ -30,14 +30,14 @@ const StyledButtonContainer = styled.div(() => ({
   margin: '14px',
 }));
 
-export const SignIn: React.FC = () => {
+export const AuthPage: React.FC = () => {
   return (
     <StyledContainer>
       <StyledButtonContainer>
-        <Button> Войти </Button>
+        <Button>Войти</Button>
       </StyledButtonContainer>
       <StyledButtonContainer>
-        <Button> Зарегистрироваться </Button>
+        <Button>Зарегистрироваться</Button>
       </StyledButtonContainer>
 
       <p>Регистрируясь вы соглашаетесь с следующими</p>
