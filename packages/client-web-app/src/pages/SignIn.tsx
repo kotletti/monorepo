@@ -25,6 +25,7 @@ const StyledContainer = styled.div(() => ({
     color: ThemeColors.main,
   },
 }));
+
 const StyledButtonContainer = styled.div(() => ({
   margin: '14px',
 }));
