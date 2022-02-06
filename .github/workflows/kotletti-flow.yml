@@ -1,0 +1,26 @@
+name: Kotletti
+
+on:
+  push:
+    branches: [develop]
+  pull_request:
+    branches: [develop]
+
+jobs:
+  install-build-eslint-test:
+    name: Run unit tests and eslint
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Installation dependencies
+        run: |
+          npm i
+          npx lerna bootstrap
+
+      - name: Run prettier check
+        run: npm run prettier:check
+
+      - name: Run typescript rebuild
+        run: npm run rebuild
