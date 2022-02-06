@@ -11,6 +11,12 @@ const FirstScreen: React.FC = () => {
     dispatch,
   } = useGlobalStore();
 
+  const handleClickIncrement = () =>
+    dispatch(Counter.increment(1));
+
+  const handleClickDecrement = () =>
+    dispatch(Counter.decrement(1));
+
   return (
     <div>
       <p>Count: {counter.count}</p>
@@ -18,12 +24,12 @@ const FirstScreen: React.FC = () => {
         <button
           title="Increment"
           color="blue"
-          onClick={() => dispatch(Counter.increment(1))}
+          onClick={handleClickIncrement}
         />
         <button
           title="Decrement"
           color="red"
-          onClick={() => dispatch(Counter.decrement(1))}
+          onClick={handleClickDecrement}
         />
       </div>
     </div>

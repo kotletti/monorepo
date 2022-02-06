@@ -1,6 +1,6 @@
 import React from 'react';
 
-export const NotFound: React.FC = () => {
+export const NotFoundPage: React.FC = () => {
   return (
     <div>
       <h1>Oops :(</h1>
