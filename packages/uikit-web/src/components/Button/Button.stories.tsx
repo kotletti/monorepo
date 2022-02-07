@@ -11,11 +11,16 @@ export default {
   argTypes: {
     children: {
       type: 'string',
-      defaultValue: 'Some text',
+      defaultValue: 'Submit',
+    },
+    variant: {
+      options: ['primary', 'secondary'],
+      control: { type: 'radio' },
     },
   },
 } as ComponentMeta<typeof Button>;
 
 export const Primary: ComponentStory<typeof Button> = ({
+  variant,
   children,
-}) => <Button>{children}</Button>;
+}) => <Button variant={variant}>{children}</Button>;
