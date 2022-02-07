@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import {
   Button,
@@ -34,10 +35,14 @@ export const AuthPage: React.FC = () => {
   return (
     <StyledContainer>
       <StyledButtonContainer>
-        <Button>Войти</Button>
+        <Link to="/sign-in">
+          <Button>Войти</Button>
+        </Link>
       </StyledButtonContainer>
       <StyledButtonContainer>
-        <Button>Зарегистрироваться</Button>
+        <Link to="/sign-up">
+          <Button>Зарегистрироваться</Button>
+        </Link>
       </StyledButtonContainer>
 
       <p>Регистрируясь вы соглашаетесь с следующими</p>
