@@ -31,6 +31,7 @@ const StyledInput = styled.input(() => ({
   outline: 'none',
   border: 0,
   color: ThemeColors.secondary40,
+  backgroundColor: 'transparent',
   textAlign: 'center' as const,
   padding: '0 10px',
 }));
