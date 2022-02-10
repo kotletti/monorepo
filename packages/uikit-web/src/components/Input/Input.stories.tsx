@@ -24,6 +24,7 @@ export default {
 export const Primary: ComponentStory<typeof Input> = ({
   label,
   value,
+  type,
 }) => {
   const [content, setContent] = useState<string>(
     value || ''
@@ -37,6 +38,7 @@ export const Primary: ComponentStory<typeof Input> = ({
     <Input
       label={label}
       value={content}
+      type={type}
       onChange={handleChange}
     />
   );
@@ -45,4 +47,23 @@ export const Primary: ComponentStory<typeof Input> = ({
 export const Secondary: ComponentStory<typeof Input> = ({
   label,
   value,
-}) => <Input label={label} value={value} icon={EyeIcon} />;
+  type,
+}) => {
+  const [content, setContent] = useState<string>(
+    value || ''
+  );
+
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement>
+  ) => setContent(e.target.value);
+
+  return (
+    <Input
+      label={label}
+      value={value}
+      type={type}
+      onChange={handleChange}
+      icon={EyeIcon}
+    />
+  );
+};
