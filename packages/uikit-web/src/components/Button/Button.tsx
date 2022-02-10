@@ -15,6 +15,9 @@ type BackIconProps = {
 type StyledContainerProps = {
   width: string;
   height: string;
+  display: 'flex' | 'block';
+  justifyContent: 'center' | 'left' | 'right' | 'none';
+  alignItems: 'center' | 'left' | 'right' | 'none';
 };
 
 type ButtonSize = {
@@ -30,8 +33,8 @@ const buttonSize: ButtonSize = {
     width: '358px',
   },
   secondary: {
-    height: '16px',
-    width: '60px',
+    height: '38px',
+    width: '70px',
   },
 };
 
@@ -39,8 +42,14 @@ const StyledContainer = styled.div(
   ({
     height = '40px',
     width = '358px',
-  }: StyledContainerProps) => ({
+    display,
+    alignItems,
+    justifyContent,
+  }: Partial<StyledContainerProps>) => ({
     position: 'relative' as const,
+    display,
+    alignItems,
+    justifyContent,
     width,
     height,
   })
@@ -65,11 +74,8 @@ const StyledSecondaryButton = styled.button(() => ({
   display: 'flex',
   justifyContent: 'center',
   alignItems: 'center',
-  height: '16px',
-  width: '60px',
-  borderRadius: '6px',
-  backgroundColor: ThemeColors.backgroundPrimary,
   border: 0,
+  background: 'none',
   color: '#3C842F',
   ...themeFont.footnote,
 
@@ -80,6 +86,8 @@ const StyledSecondaryButton = styled.button(() => ({
 
 const StyledIconContainer = styled.div(() => ({
   position: 'absolute' as const,
+  display: 'flex',
+  alignItems: 'center',
   width: '100%',
   height: '100%',
   zIndex: 1,
@@ -121,6 +129,9 @@ export const Button: React.FC<Partial<ButtonProps>> = ({
       )}
       {variant === 'secondary' && (
         <StyledContainer
+          display="flex"
+          justifyContent="center"
+          alignItems="center"
           width={buttonSize[variant].width}
           height={buttonSize[variant].height}
         >

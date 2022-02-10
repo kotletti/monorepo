@@ -3,8 +3,11 @@ export enum ThemeColors {
   main = '#3C842F',
   backgroundPrimary = '#000000',
   text01 = '#ffffff',
-  secondary30 = '4D4D4D',
-  error = 'E53935',
+  secondary30 = '#4D4D4D',
+  secondary40 = '#666666',
+  secondary80 = '#BDBDBD',
+  dividerPrimary = '#C4C4C4',
+  error = '#E53935',
 }
 
 export enum ThemeBoxShadow {
