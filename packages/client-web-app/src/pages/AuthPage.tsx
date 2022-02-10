@@ -1,11 +1,11 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import {
   Button,
   ThemeColors,
   themeFont,
 } from '@kotletti/uikit-web';
+import { Link } from 'src/components';
 
 const StyledContainer = styled.div(() => ({
   height: '100vh',
