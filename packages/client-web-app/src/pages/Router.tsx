@@ -5,6 +5,7 @@ import {
   NotFoundPage,
   SignInPage,
   SignUpPage,
+  ProfilePage,
 } from 'src/pages';
 import { AuthWrapper } from 'src/wrappers/AuthWrapper';
 
@@ -21,6 +22,7 @@ export const Router: React.FC = () => {
       />
       <Route path="/sign-in" element={<SignInPage />} />
       <Route path="/sign-up" element={<SignUpPage />} />
+      <Route path="/profile" element={<ProfilePage />} />
       <Route path="*" element={<NotFoundPage />} />
     </Routes>
   );

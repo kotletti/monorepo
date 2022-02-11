@@ -5,13 +5,16 @@ export enum ThemeColors {
   bgNavBarPrimary = '#141515',
   text01 = '#ffffff',
   text02 = '#F6F6F6',
+  text03 = '#F7F7F7',
   secondary8 = '#1E1F1F',
   secondary30 = '#4D4D4D',
   secondary40 = '#666666',
+  secondary60 = '#999999',
   secondary80 = '#BDBDBD',
   secondary90 = '#BBBBBB',
   dividerPrimary = '#C4C4C4',
   error = '#E53935',
+  brandSecondary = '#417BC2',
 }
 
 export enum ThemeBoxShadow {
