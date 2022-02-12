@@ -7,7 +7,8 @@
     "clean": "lerna run --parallel clean",
     "build": "lerna run build",
     "rebuild": "lerna run rebuild",
-    "prettier:check": "lerna run --parallel prettier:check"
+    "prettier:check": "lerna run --parallel prettier:check",
+    "watch:frontend": "lerna run --parallel watch:frontend"
   },
   "license": "ISC",
   "workspaces": {
@@ -25,7 +26,7 @@
     "husky": "^7.0.4",
     "jest": "^27.3.1",
     "lerna": "^4.0.0",
-    "nodemon": "^2.0.14",
+    "nodemon": "^2.0.15",
     "prettier": "^2.4.1",
     "rimraf": "^3.0.2",
     "serve": "^13.0.2",

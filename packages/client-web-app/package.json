@@ -11,7 +11,8 @@
     "rebuild": "npm run clean && npm run build",
     "start": "serve ./build -s -p 4400",
     "dev": "NODE_ENV=development webpack serve --config webpack.config.ts",
-    "prettier:check": "prettier --check ./src"
+    "prettier:check": "prettier --check ./src",
+    "watch:frontend": "nodemon --config nodemon.json --exec 'npm run dev'"
   },
   "dependencies": {
     "@kotletti/uikit-web": "^0.0.1",
