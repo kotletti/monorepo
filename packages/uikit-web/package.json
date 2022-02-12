@@ -14,7 +14,8 @@
     "start": "BROWSER=none start-storybook -p 4300",
     "storybook": "start-storybook -p 6006 -c .",
     "build-storybook": "build-storybook",
-    "prettier:check": "prettier --check ./src"
+    "prettier:check": "prettier --check ./src",
+    "watch:frontend": "nodemon --config nodemon.json --exec 'npm run build && npm run start'"
   },
   "devDependencies": {
     "@babel/core": "^7.16.7",
