@@ -1,6 +1,7 @@
 import React from 'react';
-import { useGlobalStore } from 'src/providers';
 import { AuthPage } from 'src/pages';
+import { ApiStateList } from 'src/services';
+import { useStore } from 'src/store';
 
 export type AuthWrapperProps = {
   withAuth: boolean;
@@ -10,16 +11,14 @@ export const AuthWrapper: React.FC<
   Partial<AuthWrapperProps>
 > = ({ children, withAuth = true }) => {
   const {
-    state: {
-      auth: { signIn },
-    },
-  } = useGlobalStore();
+    auth: { token },
+  } = useStore();
 
-  if (withAuth && signIn.status === 'success') {
+  if (withAuth && token) {
     return <div>{children}</div>;
   }
 
-  if (!withAuth && signIn.status === 'pending') {
+  if (!withAuth && token) {
     return <div>{children}</div>;
   }
 

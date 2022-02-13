@@ -4,6 +4,7 @@ import { ThemeColors, themeFont } from '../../themes';
 
 export type ButtonProps = {
   variant: 'primary' | 'secondary';
+  type: 'button' | 'submit';
 };
 
 type BackIconProps = {
@@ -116,6 +117,7 @@ const BackIcon: React.FC<Partial<BackIconProps>> = ({
 export const Button: React.FC<Partial<ButtonProps>> = ({
   children,
   variant = 'primary',
+  type = 'button',
 }) => {
   return (
     <StyledContainer
@@ -123,7 +125,7 @@ export const Button: React.FC<Partial<ButtonProps>> = ({
       height={buttonSize[variant].height}
     >
       {variant === 'primary' && (
-        <StyledPrimaryButton>
+        <StyledPrimaryButton type={type}>
           {children}
         </StyledPrimaryButton>
       )}
@@ -138,7 +140,7 @@ export const Button: React.FC<Partial<ButtonProps>> = ({
           <StyledIconContainer>
             <BackIcon />
           </StyledIconContainer>
-          <StyledSecondaryButton>
+          <StyledSecondaryButton type={type}>
             {children}
           </StyledSecondaryButton>
         </StyledContainer>

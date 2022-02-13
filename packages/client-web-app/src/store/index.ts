@@ -1,39 +1,31 @@
-import { Dispatch } from 'react';
-import { Auth } from 'src/store/auth';
-import { Counter } from 'src/store/counter';
+import localForage from 'localforage';
+import { create as createMOBXPersisted } from 'mobx-persist';
+import { createContext, useContext } from 'react';
+import { Auth } from 'src/store/Auth';
+import { ErrorHandler } from 'src/store/ErrorHandler';
 
-type RootReducerActionList =
-  | Auth.ActionList
-  | Counter.ActionList;
+localForage.config({
+  name: 'client-web-app',
+});
 
-export type InitialState = {
-  auth: Auth.InitialState;
-  counter: Counter.InitialState;
-};
+export class RootState {
+  errHandler: ErrorHandler;
+  auth: Auth;
 
-export type GlobalStoreProps = {
-  state: InitialState;
-  dispatch: Dispatch<Auth.ActionList | Counter.ActionList>;
-};
+  constructor() {
+    this.errHandler = ErrorHandler.useHandler();
 
-export const initialState: InitialState = {
-  auth: Auth.initialState,
-  counter: Counter.initialState,
-};
+    this.auth = new Auth(this);
+  }
+}
 
-export const rootReducer = (
-  state: InitialState,
-  action: RootReducerActionList
-) => {
-  const { auth, counter } = state;
+export const StoreContext = createContext<RootState>(
+  {} as RootState
+);
+export const StoreProvider = StoreContext.Provider;
+export const useStore = (): RootState =>
+  useContext(StoreContext);
 
-  const currentState: InitialState = {
-    auth: Auth.reducer(auth, action as Auth.ActionList),
-    counter: Counter.reducer(
-      counter,
-      action as Counter.ActionList
-    ),
-  };
-
-  return currentState;
-};
+export const hydrate = createMOBXPersisted({
+  storage: localForage,
+});
