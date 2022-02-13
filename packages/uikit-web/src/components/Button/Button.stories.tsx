@@ -17,10 +17,19 @@ export default {
       options: ['primary', 'secondary'],
       control: { type: 'radio' },
     },
+    type: {
+      options: ['button', 'submit'],
+      control: { type: 'radio' },
+    },
   },
 } as ComponentMeta<typeof Button>;
 
 export const Primary: ComponentStory<typeof Button> = ({
   variant,
+  type,
   children,
-}) => <Button variant={variant}>{children}</Button>;
+}) => (
+  <Button variant={variant} type={type}>
+    {children}
+  </Button>
+);

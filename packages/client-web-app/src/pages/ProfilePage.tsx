@@ -143,8 +143,8 @@ const SecondBlock: React.FC = () => {
       flexDirection="column"
       margin="0 60px"
     >
-      {cardList.map((i) => (
-        <WorkBlock {...i} />
+      {cardList.map((i, index) => (
+        <WorkBlock key={index} {...i} />
       ))}
     </Container>
   );

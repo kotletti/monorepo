@@ -26,7 +26,7 @@ export class AuthController {
     return res.json(resp);
   }
 
-  @Post('/sign-in')
+  @Post('/sign-in-email')
   async signIn(
     @Body() payload: SignDTO.SignIn,
     @Res() res: any
@@ -40,7 +40,7 @@ export class AuthController {
     return res.json({ token });
   }
 
-  @Post('/sign-up')
+  @Post('/sign-up-email')
   async signUp(
     @Body() payload: SignDTO.SignUp,
     @Res() res: any

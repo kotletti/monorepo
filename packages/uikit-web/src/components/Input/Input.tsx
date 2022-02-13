@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import { ThemeColors } from '../../themes';
 
 export type InputProps = {
+  id: string;
   label: string;
   value: string;
   type: 'text' | 'password';
@@ -10,6 +11,7 @@ export type InputProps = {
   onChange: (
     e: React.ChangeEvent<HTMLInputElement>
   ) => void;
+  onBlur: (e: React.FocusEvent<HTMLInputElement>) => void;
 };
 
 const StyledContainer = styled.div(() => ({
@@ -51,11 +53,13 @@ const StyledIconContainer = styled.div(() => ({
 }));
 
 export const Input: React.FC<Partial<InputProps>> = ({
+  id,
   label = '',
   value = '',
   type = 'text',
   icon: Icon,
   onChange = () => void 0,
+  onBlur = () => void 0,
 }) => {
   return (
     <StyledContainer>
@@ -65,9 +69,11 @@ export const Input: React.FC<Partial<InputProps>> = ({
         </StyledLabelContainer>
       )}
       <StyledInput
+        {...(id && { id })}
         value={value}
         type={type}
         onChange={onChange}
+        onBlur={onBlur}
       />
       {Icon && (
         <StyledIconContainer>

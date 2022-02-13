@@ -12,7 +12,7 @@ import ForkTsCheckerWebpackPlugin from 'fork-ts-checker-webpack-plugin';
 const {
   HOST = 'localhost',
   PORT = '4410',
-  API_HOST = 'localhost',
+  AUTH_API_HOST = 'localhost',
   NODE_ENV,
 } = process.env;
 
@@ -71,7 +71,7 @@ const config: Configuration = {
     new DefinePlugin({
       process: {
         env: {
-          API_HOST: JSON.stringify(API_HOST),
+          AUTH_API_HOST: JSON.stringify(AUTH_API_HOST),
         },
       },
     }),

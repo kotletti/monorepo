@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React from 'react';
+import { useFormik } from 'formik';
 import styled from 'styled-components';
 import {
   Button,
@@ -8,6 +9,67 @@ import {
   themeFont,
 } from '@kotletti/uikit-web';
 import { Link } from 'src/components';
+import { observer } from 'mobx-react';
+import { useStore } from 'src/store';
+
+const { AUTH_API_HOST } = process.env;
+
+if (!AUTH_API_HOST) {
+  throw new Error('AUTH_API_HOST is undefined.');
+}
+
+type SignUpValidate = {
+  firstName: string;
+  lastName: string;
+  email: string;
+  password: string;
+  repeatPassword: string;
+};
+
+const validate = ({
+  firstName,
+  lastName,
+  email,
+  password,
+  repeatPassword,
+}: SignUpValidate) => {
+  const errors: Partial<SignUpValidate> = {};
+
+  if (!email) {
+    errors.email = 'Required';
+  } else if (
+    !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(email)
+  ) {
+    errors.email = 'Invalid email address';
+  }
+
+  if (!password) {
+    errors.password = 'Required';
+  } else if (password.length < 8) {
+    errors.password = 'Must be 8 characters or more';
+  }
+
+  if (!repeatPassword) {
+    errors.repeatPassword = 'Required';
+  } else if (repeatPassword.length < 8) {
+    errors.repeatPassword = 'Must be 8 characters or more';
+  }
+
+  if (password !== repeatPassword) {
+    errors.password = 'Passwords not compared';
+    errors.repeatPassword = 'Password not compared';
+  }
+
+  if (!firstName) {
+    errors.firstName = 'Required name';
+  }
+
+  if (!lastName) {
+    errors.lastName = 'Required last name';
+  }
+
+  return errors;
+};
 
 type StyledSpanContainerProps = {
   color: ThemeColors;
@@ -51,6 +113,7 @@ const StyledSpanContainer = styled.div(
 
 const StyledInputContainer = styled.div(() => ({
   display: 'flex',
+  flexDirection: 'column' as const,
   margin: 5,
 }));
 
@@ -72,46 +135,171 @@ const StyledButtonContainerSecondary = styled.div(() => ({
   width: 75,
 }));
 
+const StyledErrorValue = styled.div(() => ({
+  display: 'flex',
+
+  span: {
+    ...themeFont.footnote,
+    color: ThemeColors.error,
+  },
+}));
+
+const SignUpForm: React.FC = observer(() => {
+  const { auth } = useStore();
+
+  console.log({ auth });
+
+  const formik = useFormik({
+    initialValues: {
+      firstName: '',
+      lastName: '',
+      email: '',
+      password: '',
+      repeatPassword: '',
+    },
+    validate,
+    onSubmit: ({
+      firstName,
+      lastName,
+      email,
+      password,
+      repeatPassword: _repeatPassword,
+    }: SignUpValidate) => {
+      console.log('On submit:', {
+        firstName,
+        lastName,
+        email,
+        password,
+      });
+    },
+  });
+
+  const hasFirstNameError = !!(
+    formik.touched.firstName && formik.errors.firstName
+  );
+
+  const hasLastNameError = !!(
+    formik.touched.lastName && formik.errors.lastName
+  );
+
+  const hasEmailError = !!(
+    formik.touched.email && formik.errors.email
+  );
+
+  const hasPasswordError = !!(
+    formik.touched.password && formik.errors.password
+  );
+
+  const hasRepeatPasswordError = !!(
+    formik.touched.repeatPassword &&
+    formik.errors.repeatPassword
+  );
+
+  return (
+    <form
+      onSubmit={formik.handleSubmit}
+      noValidate
+      autoComplete="off"
+    >
+      <StyledInputContainer>
+        {hasFirstNameError && (
+          <StyledErrorValue>
+            <span>{formik.errors.firstName}</span>
+          </StyledErrorValue>
+        )}
+        <Input
+          id="firstName"
+          label="Имя"
+          type="text"
+          value={formik.values.firstName}
+          onChange={formik.handleChange}
+          onBlur={formik.handleBlur}
+        />
+      </StyledInputContainer>
+      <StyledInputContainer>
+        {hasLastNameError && (
+          <StyledErrorValue>
+            <span>{formik.errors.lastName}</span>
+          </StyledErrorValue>
+        )}
+        <Input
+          id="lastName"
+          label="Фамилия"
+          type="text"
+          value={formik.values.lastName}
+          onChange={formik.handleChange}
+          onBlur={formik.handleBlur}
+        />
+      </StyledInputContainer>
+      <StyledInputContainer>
+        {hasEmailError && (
+          <StyledErrorValue>
+            <span>{formik.errors.email}</span>
+          </StyledErrorValue>
+        )}
+        <Input
+          id="email"
+          label="Email"
+          type="text"
+          value={formik.values.email}
+          onChange={formik.handleChange}
+          onBlur={formik.handleBlur}
+        />
+      </StyledInputContainer>
+      <StyledInputContainer>
+        {hasPasswordError && (
+          <StyledErrorValue>
+            <span>{formik.errors.password}</span>
+          </StyledErrorValue>
+        )}
+        <Input
+          id="password"
+          label="Пароль"
+          type="password"
+          value={formik.values.password}
+          onChange={formik.handleChange}
+          onBlur={formik.handleBlur}
+          icon={EyeIcon}
+        />
+      </StyledInputContainer>
+      <StyledInputContainer>
+        {hasRepeatPasswordError && (
+          <StyledErrorValue>
+            <span>{formik.errors.repeatPassword}</span>
+          </StyledErrorValue>
+        )}
+        <Input
+          id="repeatPassword"
+          label="Повторите пароль"
+          type="password"
+          value={formik.values.repeatPassword}
+          onChange={formik.handleChange}
+          onBlur={formik.handleBlur}
+          icon={EyeIcon}
+        />
+      </StyledInputContainer>
+      <StyledSpanContainer
+        color={ThemeColors.main}
+        padding="0 5px"
+        margin="10px 0"
+      >
+        <span>Уже зарегистрированы?</span>
+      </StyledSpanContainer>
+      <StyledButtonContainer>
+        <StyledButtonContainerSecondary>
+          <Link to="/">
+            <Button variant="secondary">Назад</Button>
+          </Link>
+        </StyledButtonContainerSecondary>
+        <StyledButtonContainerPrimary>
+          <Button type="submit">Далее</Button>
+        </StyledButtonContainerPrimary>
+      </StyledButtonContainer>
+    </form>
+  );
+});
+
 export const SignUpPage: React.FC = () => {
-  const [firstNameValue, setFirstNameValue] =
-    useState<string>('');
-
-  const [lastNameValue, setLastNameValue] =
-    useState<string>('');
-
-  const [emailValue, setEmailValue] = useState<string>('');
-
-  const [passwordValue, setPasswordValue] =
-    useState<string>('');
-
-  const [repeatPasswordValue, setRepeatPasswordValue] =
-    useState<string>('');
-
-  const handleChangeFirstNameValue = ({
-    target,
-  }: React.ChangeEvent<HTMLInputElement>) =>
-    setFirstNameValue(target.value);
-
-  const handleChangeLastNameValue = ({
-    target,
-  }: React.ChangeEvent<HTMLInputElement>) =>
-    setLastNameValue(target.value);
-
-  const handleChangeEmailValue = ({
-    target,
-  }: React.ChangeEvent<HTMLInputElement>) =>
-    setEmailValue(target.value);
-
-  const handleChangePasswordValue = ({
-    target,
-  }: React.ChangeEvent<HTMLInputElement>) =>
-    setPasswordValue(target.value);
-
-  const handleChangeRepeatPasswordValue = ({
-    target,
-  }: React.ChangeEvent<HTMLInputElement>) =>
-    setRepeatPasswordValue(target.value);
-
   return (
     <StyledContainer>
       <StyledContentContainer>
@@ -121,65 +309,7 @@ export const SignUpPage: React.FC = () => {
         >
           <span>Создайте учетную запись</span>
         </StyledSpanContainer>
-        <StyledInputContainer>
-          <Input
-            label="Имя"
-            type="text"
-            value={firstNameValue}
-            onChange={handleChangeFirstNameValue}
-          />
-        </StyledInputContainer>
-        <StyledInputContainer>
-          <Input
-            label="Фамилия"
-            type="text"
-            value={lastNameValue}
-            onChange={handleChangeLastNameValue}
-          />
-        </StyledInputContainer>
-        <StyledInputContainer>
-          <Input
-            label="Email"
-            type="text"
-            value={emailValue}
-            onChange={handleChangeEmailValue}
-          />
-        </StyledInputContainer>
-        <StyledInputContainer>
-          <Input
-            label="Пароль"
-            type="password"
-            value={passwordValue}
-            onChange={handleChangePasswordValue}
-            icon={EyeIcon}
-          />
-        </StyledInputContainer>
-        <StyledInputContainer>
-          <Input
-            label="Повторите пароль"
-            type="password"
-            value={repeatPasswordValue}
-            onChange={handleChangeRepeatPasswordValue}
-            icon={EyeIcon}
-          />
-        </StyledInputContainer>
-        <StyledSpanContainer
-          color={ThemeColors.main}
-          padding="0 5px"
-          margin="10px 0"
-        >
-          <span>Уже зарегистрированы?</span>
-        </StyledSpanContainer>
-        <StyledButtonContainer>
-          <StyledButtonContainerSecondary>
-            <Link to="/">
-              <Button variant="secondary">Назад</Button>
-            </Link>
-          </StyledButtonContainerSecondary>
-          <StyledButtonContainerPrimary>
-            <Button>Далее</Button>
-          </StyledButtonContainerPrimary>
-        </StyledButtonContainer>
+        <SignUpForm />
       </StyledContentContainer>
     </StyledContainer>
   );

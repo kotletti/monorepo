@@ -7,6 +7,8 @@ sourceMapSupport.install();
 const bootstrap = async (): Promise<void> => {
   const app = await NestFactory.create(AuthModule);
 
+  app.enableCors();
+
   await app.listen(3380);
 };
 
