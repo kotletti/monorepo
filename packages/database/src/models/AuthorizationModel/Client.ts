@@ -51,9 +51,18 @@ const clientSchema = new Schema<ClientDoc>({
     required,
   },
   recovery: recoverySchema,
-  lastLogin: Date,
-  createdAt: Date,
-  updatedAt: Date,
+  lastLogin: {
+    type: Date,
+    default: new Date(),
+  },
+  createdAt: {
+    type: Date,
+    default: new Date(),
+  },
+  updatedAt: {
+    type: Date,
+    default: new Date(),
+  },
   deletedAt: Date,
 });
 
