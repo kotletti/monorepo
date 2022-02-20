@@ -1,4 +1,9 @@
-import { Document, model, Schema } from 'mongoose';
+import {
+  Document,
+  model,
+  Schema,
+  SchemaTypes,
+} from 'mongoose';
 import {
   UserProfile,
   UserExpectationSalary,
@@ -148,18 +153,25 @@ const userSchema = new Schema<UserDoc>({
 
 export const UserProfileModel = model<UserProfileDoc>(
   'UserProfile',
-  userProfileSchema
+  userProfileSchema,
+  'UserProfiles'
 );
 
 export const UserExpectationModel =
   model<UserExpectationDoc>(
     'UserExpectation',
-    userExpectationSchema
+    userExpectationSchema,
+    'UserExpectations'
   );
 
 export const UserJobModel = model<UserJobDoc>(
   'UserJob',
-  userJobSchema
+  userJobSchema,
+  'UserJobs'
 );
 
-export const UserModel = model<UserDoc>('User', userSchema);
+export const UserModel = model<UserDoc>(
+  'User',
+  userSchema,
+  'Users'
+);

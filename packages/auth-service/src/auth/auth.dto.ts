@@ -8,4 +8,8 @@ export namespace SignDTO {
     email: string;
     password: string;
   };
+
+  export type Response = {
+    token: string;
+  };
 }

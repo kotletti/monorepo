@@ -24,7 +24,7 @@ export type UserProfile = {
   experience: string;
   createdAt: Date;
   updatedAt: Date;
-  deletedAt: Date;
+  deletedAt?: Date;
 };
 
 export type UserExpectationSalary = {
@@ -39,7 +39,7 @@ export type UserExpectation = {
   schedule: JobScheduleList;
   createdAt: Date;
   updatedAt: Date;
-  deletedAt: Date;
+  deletedAt?: Date;
 };
 
 export type UserJob = {
@@ -52,7 +52,7 @@ export type UserJob = {
   hardSkills: string[];
   createdAt: Date;
   updatedAt: Date;
-  deletedAt: Date;
+  deletedAt?: Date;
 };
 
 export type User = {

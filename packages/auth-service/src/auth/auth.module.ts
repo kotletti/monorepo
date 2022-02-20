@@ -20,7 +20,7 @@ export type MongoProviderInstance = {
   session: ClientSession;
 };
 
-const MongoProvider = {
+export const MongoProvider = {
   provide: 'MONGO_PROVIDER',
   useFactory: async (): Promise<MongoProviderInstance> => {
     const {

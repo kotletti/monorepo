@@ -68,10 +68,12 @@ const clientSchema = new Schema<ClientDoc>({
 
 export const ClientModel = model<ClientDoc>(
   'Client',
-  clientSchema
+  clientSchema,
+  'Clients'
 );
 
 export const TokenModel = model<TokenDoc>(
-  'Tokens',
-  tokenSchema
+  'Token',
+  tokenSchema,
+  'Tokens'
 );

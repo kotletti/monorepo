@@ -41,6 +41,38 @@ export class AuthService {
     this.session = mongoProvider.session;
   }
 
+  async deleteAllClients(): Promise<void> {
+    const { session } = this;
+
+    session.startTransaction();
+
+    try {
+      await ClientModel.deleteMany({}, { session });
+
+      await session.commitTransaction();
+    } catch (error) {
+      console.error(error);
+
+      await session.abortTransaction();
+    }
+  }
+
+  async deleteAllTokens(): Promise<void> {
+    const { session } = this;
+
+    session.startTransaction();
+
+    try {
+      await TokenModel.deleteMany({}, { session });
+
+      await session.commitTransaction();
+    } catch (error) {
+      console.error(error);
+
+      await session.abortTransaction();
+    }
+  }
+
   async findOneClientById(
     clientId: string
   ): Promise<ClientDoc> {

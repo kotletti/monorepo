@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   Post,
   Res,
@@ -30,7 +31,7 @@ export class AuthController {
   async signIn(
     @Body() payload: SignDTO.SignIn,
     @Res() res: any
-  ) {
+  ): Promise<SignDTO.Response> {
     console.log('Sign in payload:', payload);
 
     const token = await this.authService.signIn(payload);
@@ -44,7 +45,7 @@ export class AuthController {
   async signUp(
     @Body() payload: SignDTO.SignUp,
     @Res() res: any
-  ) {
+  ): Promise<SignDTO.Response> {
     console.log('Sign up payload:', payload);
 
     const token = await this.authService.signUp(payload);
@@ -52,5 +53,18 @@ export class AuthController {
     res.setHeader('Authorization', token);
 
     return res.json({ token });
+  }
+
+  @Delete('/delete-all')
+  async deleteAll(): Promise<any> {
+    if (process.env.NODE_ENV === 'test') {
+      await this.authService.deleteAllClients();
+
+      await this.authService.deleteAllTokens();
+
+      return 'All clients & tokens are deleted.';
+    }
+
+    return 'Method is deprecated.';
   }
 }
