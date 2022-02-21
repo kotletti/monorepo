@@ -1,6 +1,6 @@
 import sourceMapSupport from 'source-map-support';
 import { NestFactory } from '@nestjs/core';
-import { AuthModule } from 'src/auth/auth.module';
+import { AuthModule } from './auth/auth.module';
 
 sourceMapSupport.install();
 

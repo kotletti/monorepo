@@ -5,9 +5,9 @@ import {
   mongoConnect,
 } from '@kotletti/database';
 import { Module } from '@nestjs/common';
-import { AuthController } from 'src/auth/auth.controller';
-import { AuthGuard } from 'src/auth/auth.guard';
-import { AuthService } from 'src/auth/auth.service';
+import { AuthController } from './auth.controller';
+import { AuthGuard } from './auth.guard';
+import { AuthService } from './auth.service';
 
 const { JWT_SECRET } = process.env;
 

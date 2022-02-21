@@ -17,9 +17,9 @@ import {
   Inject,
   Injectable,
 } from '@nestjs/common';
-import { SignDTO } from 'src/auth/auth.dto';
-import { AuthGuard } from 'src/auth/auth.guard';
-import { MongoProviderInstance } from 'src/auth/auth.module';
+import { SignDTO } from './auth.dto';
+import { AuthGuard } from './auth.guard';
+import { MongoProviderInstance } from './auth.module';
 
 @Injectable()
 export class AuthService {

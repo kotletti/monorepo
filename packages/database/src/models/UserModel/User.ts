@@ -1,9 +1,4 @@
-import {
-  Document,
-  model,
-  Schema,
-  SchemaTypes,
-} from 'mongoose';
+import { Document, model, Schema } from 'mongoose';
 import {
   UserProfile,
   UserExpectationSalary,

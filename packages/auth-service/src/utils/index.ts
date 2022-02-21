@@ -1,1 +1,1 @@
-export * from 'src/utils/Auth';
+export * from './Auth';

@@ -7,10 +7,10 @@ import {
   Res,
   UseGuards,
 } from '@nestjs/common';
-import { SignDTO } from 'src/auth/auth.dto';
-import { AuthGuard } from 'src/auth/auth.guard';
-import { AuthService } from 'src/auth/auth.service';
-import { UserContext, AuthUserContext } from 'src/utils';
+import { SignDTO } from './auth.dto';
+import { AuthGuard } from './auth.guard';
+import { AuthService } from './auth.service';
+import { UserContext, AuthUserContext } from '../utils';
 
 @Controller('/api/v1')
 export class AuthController {
