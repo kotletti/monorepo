@@ -17,6 +17,15 @@ export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
   @UseGuards(AuthGuard)
+  @Get('/client')
+  async getClientId(
+    @Res() res: any,
+    @UserContext() client: AuthUserContext
+  ): Promise<any> {
+    return res.json(client);
+  }
+
+  @UseGuards(AuthGuard)
   @Get('/getMe')
   async getMe(
     @Res() res: any,

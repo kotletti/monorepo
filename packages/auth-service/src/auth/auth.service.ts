@@ -1,8 +1,13 @@
 import {
+  HttpException,
+  HttpStatus,
+  Inject,
+  Injectable,
+} from '@nestjs/common';
+import {
   ClientDoc,
   ClientModel,
   ClientSession,
-  Connection,
   TokenModel,
 } from '@kotletti/database';
 import {
@@ -11,12 +16,6 @@ import {
   createTextHash,
 } from '@kotletti/shared';
 import { CreateTokenPayload } from '@kotletti/types';
-import {
-  HttpException,
-  HttpStatus,
-  Inject,
-  Injectable,
-} from '@nestjs/common';
 import { SignDTO } from './auth.dto';
 import { AuthGuard } from './auth.guard';
 import { MongoProviderInstance } from './auth.module';
@@ -24,8 +23,6 @@ import { MongoProviderInstance } from './auth.module';
 @Injectable()
 export class AuthService {
   private authGuard: AuthGuard;
-
-  private connection: Connection;
 
   private session: ClientSession;
 
@@ -35,8 +32,6 @@ export class AuthService {
     mongoProvider: MongoProviderInstance
   ) {
     this.authGuard = authGuard;
-
-    this.connection = mongoProvider.connection;
 
     this.session = mongoProvider.session;
   }
