@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { useFormik } from 'formik';
 import styled from 'styled-components';
 import {
@@ -11,6 +11,8 @@ import {
 import { Link } from 'src/components';
 import { observer } from 'mobx-react';
 import { useStore } from 'src/store';
+import { ApiStateList } from 'src/services';
+import { flowResult } from 'mobx';
 
 const { AUTH_API_HOST } = process.env;
 
@@ -145,32 +147,31 @@ const StyledErrorValue = styled.div(() => ({
 }));
 
 const SignUpForm: React.FC = observer(() => {
-  const { auth } = useStore();
+  const { auth, user } = useStore();
+
+  const isLoading =
+    user.state === ApiStateList.success &&
+    auth.state === ApiStateList.success;
 
   console.log({ auth });
 
   const formik = useFormik({
     initialValues: {
-      firstName: '',
-      lastName: '',
-      email: '',
-      password: '',
-      repeatPassword: '',
+      firstName: 'Andrey',
+      lastName: 'Dudnik',
+      email: 'andrey@mail.ru',
+      password: 'Andrey123',
+      repeatPassword: 'Andrey123',
     },
     validate,
-    onSubmit: ({
+    onSubmit: async ({
       firstName,
       lastName,
       email,
       password,
       repeatPassword: _repeatPassword,
     }: SignUpValidate) => {
-      console.log('On submit:', {
-        firstName,
-        lastName,
-        email,
-        password,
-      });
+      console.log('client');
     },
   });
 
@@ -194,6 +195,14 @@ const SignUpForm: React.FC = observer(() => {
     formik.touched.repeatPassword &&
     formik.errors.repeatPassword
   );
+
+  if (isLoading) {
+    return (
+      <div>
+        <h1>Loading ...</h1>
+      </div>
+    );
+  }
 
   return (
     <form

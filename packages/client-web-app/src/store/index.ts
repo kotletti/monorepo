@@ -2,6 +2,7 @@ import localForage from 'localforage';
 import { create as createMOBXPersisted } from 'mobx-persist';
 import { createContext, useContext } from 'react';
 import { Auth } from 'src/store/Auth';
+import { User } from 'src/store/User';
 import { ErrorHandler } from 'src/store/ErrorHandler';
 
 localForage.config({
@@ -10,12 +11,17 @@ localForage.config({
 
 export class RootState {
   errHandler: ErrorHandler;
+
   auth: Auth;
+
+  user: User;
 
   constructor() {
     this.errHandler = ErrorHandler.useHandler();
 
     this.auth = new Auth(this);
+
+    this.user = new User(this);
   }
 }
 

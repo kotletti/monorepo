@@ -6,7 +6,7 @@ import {
   HttpStatus,
   Injectable,
 } from '@nestjs/common';
-import { AuthUserContext } from '../utils';
+import { AuthClientContext } from '@kotletti/types';
 
 // @TODO: Move to config package
 const { AUTH_SERVICE_HOST = '' } = process.env;
@@ -46,7 +46,7 @@ export class UserGuard implements CanActivate {
     }
 
     const { data: user, status } =
-      await this.httpClient.get<AuthUserContext>(
+      await this.httpClient.get<AuthClientContext>(
         '/api/v1/client',
         {
           headers: {

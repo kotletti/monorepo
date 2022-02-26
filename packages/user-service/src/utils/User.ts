@@ -2,12 +2,7 @@ import {
   createParamDecorator,
   ExecutionContext,
 } from '@nestjs/common';
-
-export type AuthUserContext = {
-  clientId: string;
-  roles: string[];
-  token: string;
-};
+import { AuthClientContext } from '@kotletti/types';
 
 /**
  * @description: Decorator for injection auth user context
@@ -16,7 +11,7 @@ export const UserContext = createParamDecorator(
   (
     _data: unknown,
     ctx: ExecutionContext
-  ): AuthUserContext => {
+  ): AuthClientContext => {
     const {
       user: { token, roles, clientId },
     } = ctx.switchToHttp().getRequest();

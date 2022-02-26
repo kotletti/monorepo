@@ -1,20 +1,21 @@
+import jwt from 'jsonwebtoken';
+import {
+  Injectable,
+  CanActivate,
+  ExecutionContext,
+  HttpException,
+  HttpStatus,
+} from '@nestjs/common';
+
 import {
   ClientModel,
   TokenModel,
 } from '@kotletti/database';
 import {
+  AuthClientContext,
   CreateTokenPayload,
   TokenPayload,
 } from '@kotletti/types';
-import {
-  CanActivate,
-  ExecutionContext,
-  HttpException,
-  HttpStatus,
-  Injectable,
-} from '@nestjs/common';
-import jwt from 'jsonwebtoken';
-import { AuthUserContext } from '../utils';
 
 // @TODO: Move to config package
 const { JWT_SECRET = '' } = process.env;
@@ -56,7 +57,7 @@ export class AuthGuard implements CanActivate {
     );
 
     const user = jwt.decode(accessToken) as Omit<
-      AuthUserContext,
+      AuthClientContext,
       'token'
     >;
 

@@ -13,6 +13,7 @@ const {
   HOST = 'localhost',
   PORT = '4410',
   AUTH_API_HOST = 'localhost',
+  USER_API_HOST = 'localhost',
   NODE_ENV,
 } = process.env;
 
@@ -72,6 +73,7 @@ const config: Configuration = {
       process: {
         env: {
           AUTH_API_HOST: JSON.stringify(AUTH_API_HOST),
+          USER_API_HOST: JSON.stringify(USER_API_HOST),
         },
       },
     }),

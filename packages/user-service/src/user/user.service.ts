@@ -11,6 +11,7 @@ import {
   UserProfileModel,
 } from '@kotletti/database';
 import { MongoProviderInstance } from './user.module';
+import { UserDTO } from './user.dto';
 
 @Injectable()
 export class UserService {
@@ -21,6 +22,25 @@ export class UserService {
     mongoProvider: MongoProviderInstance
   ) {
     this.session = mongoProvider.session;
+  }
+
+  async createOneUser(
+    payload: UserDTO.CreatePayload
+  ): Promise<UserDoc> {
+    const { clientId, profile } = payload;
+
+    const [user] = await UserModel.create([
+      {
+        clientId,
+        profile,
+      },
+    ]).catch((err: Error) => {
+      console.error(err);
+
+      throw err;
+    });
+
+    return user;
   }
 
   async findUserById(

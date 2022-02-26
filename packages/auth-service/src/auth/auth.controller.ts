@@ -7,10 +7,11 @@ import {
   Res,
   UseGuards,
 } from '@nestjs/common';
+import { AuthClientContext } from '@kotletti/types';
 import { SignDTO } from './auth.dto';
 import { AuthGuard } from './auth.guard';
 import { AuthService } from './auth.service';
-import { UserContext, AuthUserContext } from '../utils';
+import { ClientContext } from '../utils';
 
 @Controller('/api/v1')
 export class AuthController {
@@ -20,7 +21,7 @@ export class AuthController {
   @Get('/client')
   async getClientId(
     @Res() res: any,
-    @UserContext() client: AuthUserContext
+    @ClientContext() client: AuthClientContext
   ): Promise<any> {
     return res.json(client);
   }
@@ -29,7 +30,7 @@ export class AuthController {
   @Get('/getMe')
   async getMe(
     @Res() res: any,
-    @UserContext() { clientId }: AuthUserContext
+    @ClientContext() { clientId }: AuthClientContext
   ): Promise<any> {
     const resp = await this.authService.getMe(clientId);
 
