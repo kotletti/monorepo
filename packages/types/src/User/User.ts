@@ -56,7 +56,7 @@ export type UserJob = {
 };
 
 export type User = {
-  authClientId: string;
+  clientId: string;
   profile: UserProfile;
   expectation: UserExpectation;
   jobs: UserJob[];

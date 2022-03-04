@@ -7,6 +7,8 @@ import {
   EditNoteIcon,
   themeFont,
 } from '@kotletti/uikit-web';
+import { useSelector } from 'react-redux';
+import { RootState } from 'src/store';
 
 type WorkBlockProps = {
   title?: string;
@@ -17,6 +19,11 @@ type WorkBlockProps = {
   tools: string;
   softSkills: string;
   hardSkills: string;
+};
+
+type ProfileBlockProps = {
+  firstName: string;
+  lastName: string;
 };
 
 const StyledCardTitle = styled.span(() => ({
@@ -150,14 +157,19 @@ const SecondBlock: React.FC = () => {
   );
 };
 
-const ProfileBlock: React.FC = () => (
+const ProfileBlock: React.FC<ProfileBlockProps> = ({
+  firstName,
+  lastName,
+}) => (
   <Container>
     <Container
       display="flex"
       justifyContent="space-between"
     >
       <Container display="flex">
-        <StyledCardTitle>Дарья Цукали</StyledCardTitle>
+        <StyledCardTitle>
+          {firstName} {lastName}
+        </StyledCardTitle>
       </Container>
       <Container display="flex">
         <EditNoteIcon fill={ThemeColors.text01} />
@@ -232,17 +244,26 @@ const ExpectationsBlock: React.FC = () => (
   </Container>
 );
 
-const FirstBlock: React.FC = () => (
-  <Container
-    display="flex"
-    flexDirection="column"
-    margin="0 60px"
-    width="308px"
-  >
-    <ProfileBlock />
-    <ExpectationsBlock />
-  </Container>
-);
+const FirstBlock: React.FC = () => {
+  const {
+    profile: { firstName, lastName },
+  } = useSelector((state: RootState) => state.user.my!);
+
+  return (
+    <Container
+      display="flex"
+      flexDirection="column"
+      margin="0 60px"
+      width="308px"
+    >
+      <ProfileBlock
+        firstName={firstName}
+        lastName={lastName}
+      />
+      <ExpectationsBlock />
+    </Container>
+  );
+};
 
 const BlockContainer: React.FC = () => (
   <Container margin="100px 60px" display="flex">

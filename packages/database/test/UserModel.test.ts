@@ -10,7 +10,7 @@ import {
 import {
   mongoConnect,
   UserModel,
-  genObjectId,
+  UserProfileModel,
 } from '../src';
 
 const { MONGO_URI, MONGO_DB_NAME } = process.env;
@@ -28,8 +28,8 @@ const mongoConfig: Config['database']['mongo'] = {
   dbName: MONGO_DB_NAME,
 };
 
-const createUser = (): User => ({
-  authClientId: v4(),
+const createUser = (clientId: string = v4()): User => ({
+  clientId,
   profile: {
     firstName: v4(),
     lastName: v4(),
@@ -67,8 +67,6 @@ const createUser = (): User => ({
   ],
 });
 
-const defaultUser = createUser();
-
 describe('Client model suits.', () => {
   let connect: Connection;
 
@@ -85,37 +83,34 @@ describe('Client model suits.', () => {
   });
 
   it('User should not be exists.', async () => {
+    const defaultUser = createUser();
+
     const user = await UserModel.findOne({
-      authClientId: defaultUser.authClientId,
+      clientId: defaultUser.clientId,
     });
 
     expect(user).toBeFalsy();
   });
 
   it('Should create new user.', async () => {
+    const defaultUser = createUser(
+      '621b6c58483698c2c98d3032'
+    );
+
     const session = await connect.startSession();
 
     session.startTransaction();
 
-    const _id = genObjectId();
+    const [profile] = await UserProfileModel.create(
+      [defaultUser.profile],
+      { session }
+    );
 
     const [user] = await UserModel.create(
       [
         {
-          ...defaultUser,
-          _id,
-          profile: {
-            ...defaultUser.profile,
-            _id,
-          },
-          expectation: {
-            ...defaultUser.expectation,
-            _id,
-          },
-          jobs: defaultUser.jobs.map((i) => ({
-            ...i,
-            _id,
-          })),
+          clientId: defaultUser.clientId,
+          profile: profile._id,
         },
       ],
       {
@@ -123,16 +118,24 @@ describe('Client model suits.', () => {
       }
     );
 
+    const fUser = await UserModel.findOne(
+      {
+        clientId: defaultUser.clientId,
+      },
+      null,
+      { session }
+    ).populate('profile');
+
+    console.log('Found user:', fUser);
+
     await session.abortTransaction();
 
     await session.endSession();
 
-    console.log({ user });
+    // console.log('User:', user.toJSON());
 
     expect(user).toBeTruthy();
 
-    expect(user.authClientId).toBe(
-      defaultUser.authClientId
-    );
+    expect(user.clientId).toBe(defaultUser.clientId);
   });
 });

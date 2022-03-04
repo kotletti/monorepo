@@ -100,5 +100,9 @@
     "skipLibCheck": true /* Skip type checking all .d.ts files. */
   },
   "exclude": ["node_modules", "test", "public"],
-  "include": ["src"]
+  "include": ["src"],
+  "files": [
+    "../../node_modules/redux-persist/types/storage/index.d.ts",
+    "../../node_modules/redux-persist/types/integration/react.d.ts"
+  ]
 }

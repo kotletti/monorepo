@@ -11,7 +11,7 @@ import {
   UserProfileModel,
 } from '@kotletti/database';
 import { MongoProviderInstance } from './user.module';
-import { UserDTO } from './user.dto';
+import { UserDTO, UserProfileDTO } from './user.dto';
 
 @Injectable()
 export class UserService {
@@ -24,21 +24,46 @@ export class UserService {
     this.session = mongoProvider.session;
   }
 
-  async createOneUser(
-    payload: UserDTO.CreatePayload
-  ): Promise<UserDoc> {
-    const { clientId, profile } = payload;
-
-    const [user] = await UserModel.create([
-      {
-        clientId,
-        profile,
-      },
+  async createOneProfile(
+    payload: UserProfileDTO.CreatePayload
+  ): Promise<UserProfileDoc> {
+    const [profile] = await UserProfileModel.create([
+      payload,
     ]).catch((err: Error) => {
       console.error(err);
 
       throw err;
     });
+
+    return profile;
+  }
+
+  async createOneUser(
+    payload: UserDTO.CreatePayload
+  ): Promise<UserDoc> {
+    const [user] = await UserModel.create([payload]).catch(
+      (err: Error) => {
+        console.error(err);
+
+        throw err;
+      }
+    );
+
+    return user;
+  }
+
+  async findUserByClientId(
+    clientId: string
+  ): Promise<UserDoc | null> {
+    const user = await UserModel.findOne({
+      clientId,
+    })
+      .populate('profile')
+      .catch((err: Error) => {
+        console.error(err);
+
+        throw err;
+      });
 
     return user;
   }

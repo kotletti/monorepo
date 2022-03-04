@@ -2,11 +2,16 @@ import {
   Body,
   Controller,
   Get,
+  HttpException,
+  HttpStatus,
   Post,
   Res,
   UseGuards,
 } from '@nestjs/common';
-import { AuthClientContext } from '@kotletti/types';
+import {
+  AuthClientContext,
+  AuthContext,
+} from '@kotletti/types';
 import { UserContext } from '../utils';
 import { UserGuard } from './user.guard';
 import { UserService } from './user.service';
@@ -17,13 +22,23 @@ export class UserController {
   constructor(private readonly userService: UserService) {}
 
   @UseGuards(UserGuard)
-  @Get('/me')
-  async getMe(
+  @Get('/my')
+  async my(
     @Res() res: any,
     @UserContext() client: AuthClientContext
   ): Promise<any> {
-    console.log({ client });
-    return res.json(client);
+    const user = await this.userService.findUserByClientId(
+      client.clientId
+    );
+
+    if (!user) {
+      throw new HttpException(
+        'My user is not found.',
+        HttpStatus.NOT_FOUND
+      );
+    }
+
+    return res.json(user.toJSON());
   }
 
   @UseGuards(UserGuard)
@@ -32,19 +47,30 @@ export class UserController {
     @Res() res: any,
     @Body() body: UserDTO.CreateRequest,
     @UserContext() client: AuthClientContext
-  ): Promise<any> {
+  ): Promise<AuthContext> {
     const { firstName, lastName } = body;
     const { clientId } = client;
 
-    const payload: UserDTO.CreatePayload = {
+    const { _id: profileId } =
+      await this.userService.createOneProfile({
+        firstName,
+        lastName,
+      });
+
+    const user = await this.userService.createOneUser({
       clientId,
-      profile: { firstName, lastName },
+      profile: profileId,
+    });
+
+    console.log({ user });
+
+    const response = {
+      user: user.toJSON(),
+      client,
     };
 
-    const user = await this.userService.createOneUser(
-      payload
-    );
+    console.log(response);
 
-    return res.json({ user, client });
+    return res.json(response);
   }
 }

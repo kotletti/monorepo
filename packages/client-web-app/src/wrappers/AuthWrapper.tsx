@@ -1,7 +1,7 @@
 import React from 'react';
+import { useSelector } from 'react-redux';
 import { AuthPage } from 'src/pages';
-import { ApiStateList } from 'src/services';
-import { useStore } from 'src/store';
+import { RootState } from 'src/store';
 
 export type AuthWrapperProps = {
   withAuth: boolean;
@@ -10,21 +10,21 @@ export type AuthWrapperProps = {
 export const AuthWrapper: React.FC<
   Partial<AuthWrapperProps>
 > = ({ children, withAuth = true }) => {
-  const {
-    auth: { token },
-  } = useStore();
+  const token = useSelector(
+    (state: RootState) => state.auth.token
+  );
 
   if (withAuth && token) {
-    return <div>{children}</div>;
+    return <>{children}</>;
   }
 
   if (!withAuth && token) {
-    return <div>{children}</div>;
+    return <>{children}</>;
   }
 
   return (
-    <div>
+    <>
       <AuthPage />
-    </div>
+    </>
   );
 };

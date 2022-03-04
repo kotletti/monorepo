@@ -6,11 +6,15 @@ export namespace UserDTO {
 
   export type CreatePayload = {
     clientId: string;
-    profile: {
-      firstName: string;
-      lastName: string;
-    };
+    profile: string;
   };
 
   // export type CreateResponse {}
+}
+
+export namespace UserProfileDTO {
+  export type CreatePayload = {
+    firstName: string;
+    lastName: string;
+  };
 }

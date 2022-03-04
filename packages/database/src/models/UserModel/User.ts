@@ -125,7 +125,7 @@ const userJobSchema = new Schema<UserJobDoc>({
 });
 
 const userSchema = new Schema<UserDoc>({
-  authClientId: {
+  clientId: {
     type: String,
     required,
     unique,

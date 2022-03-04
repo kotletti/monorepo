@@ -1,37 +1,58 @@
-import localForage from 'localforage';
-import { create as createMOBXPersisted } from 'mobx-persist';
-import { createContext, useContext } from 'react';
-import { Auth } from 'src/store/Auth';
-import { User } from 'src/store/User';
-import { ErrorHandler } from 'src/store/ErrorHandler';
+import {
+  configureStore,
+  combineReducers,
+  Reducer,
+} from '@reduxjs/toolkit';
+import {
+  persistStore,
+  persistReducer,
+  FLUSH,
+  REHYDRATE,
+  PAUSE,
+  PERSIST,
+  PURGE,
+  REGISTER,
+  PersistConfig,
+} from 'redux-persist';
+import storage from 'redux-persist/lib/storage';
+import { authReducer } from 'src/store/auth';
+import { userReducer } from 'src/store/user';
 
-localForage.config({
-  name: 'client-web-app',
+const persistConfig: PersistConfig<any> = {
+  key: 'root',
+  version: 1,
+  storage,
+};
+
+const rootReducer = combineReducers({
+  auth: authReducer,
+  user: userReducer,
 });
 
-export class RootState {
-  errHandler: ErrorHandler;
-
-  auth: Auth;
-
-  user: User;
-
-  constructor() {
-    this.errHandler = ErrorHandler.useHandler();
-
-    this.auth = new Auth(this);
-
-    this.user = new User(this);
-  }
-}
-
-export const StoreContext = createContext<RootState>(
-  {} as RootState
+const persistedReducer = persistReducer(
+  persistConfig,
+  rootReducer
 );
-export const StoreProvider = StoreContext.Provider;
-export const useStore = (): RootState =>
-  useContext(StoreContext);
 
-export const hydrate = createMOBXPersisted({
-  storage: localForage,
+export const store = configureStore({
+  reducer: rootReducer,
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware({
+      serializableCheck: {
+        ignoredActions: [
+          FLUSH,
+          REHYDRATE,
+          PAUSE,
+          PERSIST,
+          PURGE,
+          REGISTER,
+        ],
+      },
+    }),
 });
+
+export type RootState = ReturnType<typeof store.getState>;
+
+export type AppDispatch = typeof store.dispatch;
+
+export const persistor = persistStore(store);
