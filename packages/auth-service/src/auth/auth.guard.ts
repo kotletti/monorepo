@@ -1,19 +1,21 @@
+import jwt from 'jsonwebtoken';
+import {
+  Injectable,
+  CanActivate,
+  ExecutionContext,
+  HttpException,
+  HttpStatus,
+} from '@nestjs/common';
+
 import {
   ClientModel,
   TokenModel,
 } from '@kotletti/database';
 import {
+  AuthClientContext,
   CreateTokenPayload,
   TokenPayload,
 } from '@kotletti/types';
-import {
-  CanActivate,
-  ExecutionContext,
-  HttpException,
-  HttpStatus,
-  Injectable,
-} from '@nestjs/common';
-import jwt from 'jsonwebtoken';
 
 // @TODO: Move to config package
 const { JWT_SECRET = '' } = process.env;
@@ -25,7 +27,7 @@ if (!JWT_SECRET) {
 @Injectable()
 export class AuthGuard implements CanActivate {
   private readonly expiresIn = {
-    access: '60s',
+    access: '1d',
     refresh: '30d',
   };
 
@@ -54,7 +56,18 @@ export class AuthGuard implements CanActivate {
       authorization
     );
 
-    req.user = jwt.decode(accessToken);
+    const user = jwt.decode(accessToken) as Omit<
+      AuthClientContext,
+      'token'
+    >;
+
+    if (!user) {
+      console.log('Decoded user is undefined.');
+
+      return false;
+    }
+
+    req.user = { ...user, token: accessToken };
 
     res.setHeader('Authorization', accessToken);
 

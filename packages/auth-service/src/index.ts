@@ -1,6 +1,6 @@
 import sourceMapSupport from 'source-map-support';
 import { NestFactory } from '@nestjs/core';
-import { AuthModule } from 'src/auth/auth.module';
+import { AuthModule } from './auth/auth.module';
 
 sourceMapSupport.install();
 
@@ -14,6 +14,6 @@ const bootstrap = async (): Promise<void> => {
 
 bootstrap().then(() => {
   console.log(
-    `Auth service producer started at http://localhost:3380`
+    `Auth service started at http://localhost:3380`
   );
 });

@@ -3,6 +3,16 @@ import axios, {
   AxiosRequestConfig,
 } from 'axios';
 
+const { AUTH_API_HOST, USER_API_HOST } = process.env;
+
+if (!AUTH_API_HOST) {
+  throw new Error('AUTH_API_HOST is undefined.');
+}
+
+if (!USER_API_HOST) {
+  throw new Error('USER_API_HOST is undefined.');
+}
+
 export enum ApiStateList {
   initial = 'initial',
   pending = 'pending',
@@ -10,10 +20,21 @@ export enum ApiStateList {
   failure = 'failure',
 }
 
+export type ApiService = {
+  [k in 'auth' | 'user']: string;
+};
+
+const apiService: ApiService = {
+  auth: AUTH_API_HOST,
+  user: USER_API_HOST,
+};
+
 export class Api {
   private client: AxiosInstance;
 
-  constructor(baseURL: string) {
+  constructor(url: keyof ApiService) {
+    const baseURL = apiService[url];
+
     this.client = axios.create({
       baseURL,
     });

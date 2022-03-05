@@ -4,7 +4,7 @@
   "description": "Types dependency for services",
   "author": "@ddkand",
   "license": "ISC",
-  "main": "./build/index.d.ts",
+  "main": "./build/index.js",
   "types": "./build/index.d.ts",
   "typings": "./build/index.d.ts",
   "scripts": {

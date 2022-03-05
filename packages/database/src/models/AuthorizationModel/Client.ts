@@ -51,18 +51,29 @@ const clientSchema = new Schema<ClientDoc>({
     required,
   },
   recovery: recoverySchema,
-  lastLogin: Date,
-  createdAt: Date,
-  updatedAt: Date,
+  lastLogin: {
+    type: Date,
+    default: new Date(),
+  },
+  createdAt: {
+    type: Date,
+    default: new Date(),
+  },
+  updatedAt: {
+    type: Date,
+    default: new Date(),
+  },
   deletedAt: Date,
 });
 
 export const ClientModel = model<ClientDoc>(
   'Client',
-  clientSchema
+  clientSchema,
+  'Clients'
 );
 
 export const TokenModel = model<TokenDoc>(
-  'Tokens',
-  tokenSchema
+  'Token',
+  tokenSchema,
+  'Tokens'
 );

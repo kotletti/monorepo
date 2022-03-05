@@ -1,8 +1,13 @@
 import {
+  HttpException,
+  HttpStatus,
+  Inject,
+  Injectable,
+} from '@nestjs/common';
+import {
   ClientDoc,
   ClientModel,
   ClientSession,
-  Connection,
   TokenModel,
 } from '@kotletti/database';
 import {
@@ -11,21 +16,13 @@ import {
   createTextHash,
 } from '@kotletti/shared';
 import { CreateTokenPayload } from '@kotletti/types';
-import {
-  HttpException,
-  HttpStatus,
-  Inject,
-  Injectable,
-} from '@nestjs/common';
-import { SignDTO } from 'src/auth/auth.dto';
-import { AuthGuard } from 'src/auth/auth.guard';
-import { MongoProviderInstance } from 'src/auth/auth.module';
+import { SignDTO } from './auth.dto';
+import { AuthGuard } from './auth.guard';
+import { MongoProviderInstance } from './auth.module';
 
 @Injectable()
 export class AuthService {
   private authGuard: AuthGuard;
-
-  private connection: Connection;
 
   private session: ClientSession;
 
@@ -36,9 +33,39 @@ export class AuthService {
   ) {
     this.authGuard = authGuard;
 
-    this.connection = mongoProvider.connection;
-
     this.session = mongoProvider.session;
+  }
+
+  async deleteAllClients(): Promise<void> {
+    const { session } = this;
+
+    session.startTransaction();
+
+    try {
+      await ClientModel.deleteMany({}, { session });
+
+      await session.commitTransaction();
+    } catch (error) {
+      console.error(error);
+
+      await session.abortTransaction();
+    }
+  }
+
+  async deleteAllTokens(): Promise<void> {
+    const { session } = this;
+
+    session.startTransaction();
+
+    try {
+      await TokenModel.deleteMany({}, { session });
+
+      await session.commitTransaction();
+    } catch (error) {
+      console.error(error);
+
+      await session.abortTransaction();
+    }
   }
 
   async findOneClientById(

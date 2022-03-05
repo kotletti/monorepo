@@ -5,28 +5,41 @@ import React, {
 } from 'react';
 import ReactDOM from 'react-dom';
 import { BrowserRouter } from 'react-router-dom';
-import { Router } from 'src/pages';
 import {
-  hydrate,
-  RootState,
-  StoreProvider,
-} from 'src/store';
+  Provider as ReduxProvider,
+  useDispatch,
+  useSelector,
+} from 'react-redux';
+import { PersistGate } from 'redux-persist/integration/react';
+import { Router } from 'src/pages';
+import { persistor, RootState, store } from 'src/store';
+import { UserThunk } from 'src/store/user';
 
-export const rootState = new RootState();
+const AppLoading: React.FC = () => (
+  <div>
+    <h1>Loading ...</h1>
+  </div>
+);
 
 const AppInitialize: React.FC = ({ children }) => {
-  const [loading, setLoading] = useState(true);
+  const dispatch = useDispatch();
 
-  const initialize = useCallback(() => {
-    return Promise.all([hydrate('auth', rootState.auth)]);
-  }, []);
+  const token = useSelector(
+    (state: RootState) => state.auth.token
+  );
+
+  const user = useSelector(
+    (state: RootState) => state.user.my
+  );
 
   useEffect(() => {
-    initialize().then(() => setLoading(false));
-  }, [initialize]);
+    if (token && !user) {
+      dispatch(UserThunk.my({ token }));
+    }
+  }, [token]);
 
-  if (loading) {
-    return <h1>Loading ...</h1>;
+  if (token && !user) {
+    return <AppLoading />;
   }
 
   return <>{children}</>;
@@ -34,13 +47,18 @@ const AppInitialize: React.FC = ({ children }) => {
 
 ReactDOM.render(
   <React.StrictMode>
-    <StoreProvider value={rootState}>
-      <AppInitialize>
+    <ReduxProvider store={store}>
+      <PersistGate
+        loading={<AppLoading />}
+        persistor={persistor}
+      >
         <BrowserRouter>
-          <Router />
+          <AppInitialize>
+            <Router />
+          </AppInitialize>
         </BrowserRouter>
-      </AppInitialize>
-    </StoreProvider>
+      </PersistGate>
+    </ReduxProvider>
   </React.StrictMode>,
   document.getElementById('root')
 );

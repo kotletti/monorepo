@@ -1,0 +1,34 @@
+{
+  "name": "@kotletti/user-service",
+  "version": "0.0.1",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "clean": "rimraf ./build",
+    "build": "tsc -b",
+    "rebuild": "npm run clean && npm run build",
+    "start": "node ./build",
+    "watch": "nodemon --config nodemon.json ./src/index.ts",
+    "prettier:check": "prettier --check ./src"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@kotletti/config": "^0.0.1",
+    "@kotletti/database": "^0.0.1",
+    "@kotletti/types": "^0.0.1",
+    "@nestjs/common": "^8.3.1",
+    "@nestjs/config": "^1.2.0",
+    "@nestjs/core": "^8.3.1",
+    "@nestjs/platform-express": "^8.3.1",
+    "axios": "^0.26.0",
+    "reflect-metadata": "^0.1.13",
+    "rxjs": "^7.5.4",
+    "source-map-support": "^0.5.21"
+  },
+  "devDependencies": {
+    "@nestjs/testing": "^8.3.1",
+    "@types/axios": "^0.14.0",
+    "@types/source-map-support": "^0.5.4"
+  }
+}

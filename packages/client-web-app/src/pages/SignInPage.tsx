@@ -1,5 +1,4 @@
-import React from 'react';
-import { observer } from 'mobx-react-lite';
+import React, { useEffect } from 'react';
 import { useFormik } from 'formik';
 import styled from 'styled-components';
 import {
@@ -10,8 +9,10 @@ import {
   themeFont,
 } from '@kotletti/uikit-web';
 import { Link } from 'src/components';
-import { useStore } from 'src/store';
-import { ApiStateList } from 'src/services';
+import { useDispatch, useSelector } from 'react-redux';
+import { RootState } from 'src/store';
+import { UserThunk } from 'src/store/user';
+import { AuthThunk } from 'src/store/auth';
 
 type StyledSpanContainerProps = {
   color: ThemeColors;
@@ -144,10 +145,18 @@ const StyledErrorSpan = styled.span(() => ({
   color: ThemeColors.error,
 }));
 
-const SignInForm: React.FC = observer(() => {
-  const {
-    auth: { state, signInEmail },
-  } = useStore();
+const SignInForm: React.FC = () => {
+  const dispatch = useDispatch();
+
+  const token = useSelector(
+    (state: RootState) => state.auth.token
+  );
+
+  useEffect(() => {
+    if (token) {
+      dispatch(UserThunk.my({ token }));
+    }
+  }, [token]);
 
   const formik = useFormik({
     initialValues: {
@@ -156,7 +165,12 @@ const SignInForm: React.FC = observer(() => {
     },
     validate,
     onSubmit: ({ email, password }) => {
-      signInEmail(email, password);
+      dispatch(
+        AuthThunk.signInEmail({
+          email,
+          password,
+        })
+      );
     },
   });
 
@@ -167,14 +181,6 @@ const SignInForm: React.FC = observer(() => {
   const hasPasswordError = !!(
     formik.touched.password && formik.errors.password
   );
-
-  if (state === ApiStateList.pending) {
-    return (
-      <StyledIsLoading>
-        <h1>Loading ....</h1>
-      </StyledIsLoading>
-    );
-  }
 
   return (
     <form
@@ -232,14 +238,10 @@ const SignInForm: React.FC = observer(() => {
       </StyledButtonContainer>
     </form>
   );
-});
+};
 
-export const SignInPage: React.FC = observer(() => {
-  const {
-    auth: { errors, token },
-  } = useStore();
-
-  console.log({ token });
+export const SignInPage: React.FC = () => {
+  const errors: string[] = [];
 
   return (
     <StyledContainer>
@@ -263,4 +265,4 @@ export const SignInPage: React.FC = observer(() => {
       </StyledContentContainer>
     </StyledContainer>
   );
-});
+};

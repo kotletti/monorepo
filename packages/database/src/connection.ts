@@ -4,6 +4,7 @@ import mongoose, {
   ClientSession,
 } from 'mongoose';
 import { Config } from '@kotletti/types';
+import { type } from 'os';
 
 export type MongoConnectOptions = {
   isReconnect: boolean;

@@ -8,5 +8,6 @@
   "rejectCycles": true,
   "maximize-concurrency": true,
   "stream": true,
-  "parallel": false
+  "parallel": false,
+  "hoist": true
 }

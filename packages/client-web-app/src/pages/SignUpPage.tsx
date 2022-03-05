@@ -1,4 +1,8 @@
-import React from 'react';
+import React, {
+  useCallback,
+  useEffect,
+  useState,
+} from 'react';
 import { useFormik } from 'formik';
 import styled from 'styled-components';
 import {
@@ -9,14 +13,11 @@ import {
   themeFont,
 } from '@kotletti/uikit-web';
 import { Link } from 'src/components';
-import { observer } from 'mobx-react';
-import { useStore } from 'src/store';
-
-const { AUTH_API_HOST } = process.env;
-
-if (!AUTH_API_HOST) {
-  throw new Error('AUTH_API_HOST is undefined.');
-}
+import { ApiStateList } from 'src/services';
+import { useDispatch, useSelector } from 'react-redux';
+import { RootState } from 'src/store';
+import { AuthThunk } from 'src/store/auth';
+import { UserThunk } from 'src/store/user';
 
 type SignUpValidate = {
   firstName: string;
@@ -144,10 +145,31 @@ const StyledErrorValue = styled.div(() => ({
   },
 }));
 
-const SignUpForm: React.FC = observer(() => {
-  const { auth } = useStore();
+const SignUpForm: React.FC = () => {
+  const dispatch = useDispatch();
 
-  console.log({ auth });
+  const token = useSelector(
+    (state: RootState) => state.auth.token
+  );
+
+  const myUser = useSelector(
+    (state: RootState) => state.user.my
+  );
+
+  const [firstName, setFirstName] = useState<string>('');
+  const [lastName, setLastName] = useState<string>('');
+
+  useEffect(() => {
+    if (token && !myUser) {
+      dispatch(
+        UserThunk.create({
+          firstName,
+          lastName,
+          token,
+        })
+      );
+    }
+  }, [firstName, lastName, token, myUser]);
 
   const formik = useFormik({
     initialValues: {
@@ -165,12 +187,9 @@ const SignUpForm: React.FC = observer(() => {
       password,
       repeatPassword: _repeatPassword,
     }: SignUpValidate) => {
-      console.log('On submit:', {
-        firstName,
-        lastName,
-        email,
-        password,
-      });
+      setFirstName(firstName);
+      setLastName(lastName);
+      dispatch(AuthThunk.signUpEmail({ email, password }));
     },
   });
 
@@ -297,7 +316,7 @@ const SignUpForm: React.FC = observer(() => {
       </StyledButtonContainer>
     </form>
   );
-});
+};
 
 export const SignUpPage: React.FC = () => {
   return (
